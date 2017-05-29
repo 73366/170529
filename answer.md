@@ -16,34 +16,50 @@ mongoimport --db testDBhw290517 --collection testCollect --file d:/test/data/dat
 
 Запустить консоль командой mongo. 
 ======= done
+
 Выполнить команду use yourDbName.
 ======= done
+
 use testDBhw290517
 
 написать следующие запросы:
 
-Написать запрос для поиска всех студентов, у которых score > 87% и < 93% по любому из типов выполненных заданий.
+1) Написать запрос для поиска всех студентов, у которых score > 87% и < 93% по любому из типов выполненных заданий.
+
 ======= answer 
+
 db.testCollect.find({scores:{$elemMatch:{$and:[{score:{$gt:87}},{score:{$lt:93}}]}}}).pretty()
 
 ======= result
+
 > db.testCollect.find({scores:{$elemMatch:{$and:[{score:{$gt:87}},{score:{$lt:93}}]}}}).count()
+
 52
 
-Написать запрос-агрегацию для выборки всех студентов, у которых результат по экзамену (type: "exam") более 90% (использование unwind)
+
+2) Написать запрос-агрегацию для выборки всех студентов, у которых результат по экзамену (type: "exam") более 90% (использование unwind)
+
 ======= answer
+
 db.testCollect.aggregate([{$unwind:"$scores"},{$match:{$and:[{"scores.type":"exam"},{"scores.score":{$gt:90}}]}}]).pretty()
 
 ======= result
+
 > db.testCollect.aggregate([{$unwind:"$scores"},{$match:{$and:[{"scores.type":"exam"},{"scores.score":{$gt:90}}]}}]).pretty().itcount()
+
 18
 
-Студентам с именем Dusti Lemmond добавить поле “accepted” со значением true.
+
+3) Студентам с именем Dusti Lemmond добавить поле “accepted” со значением true.
+
 ======= answer
+
 db.testCollect.update({name:"Dusti Lemmond"},{$set:{accepted:true}}, {multi: true})
 
 ======= result
+
 > db.testCollect.find({name:"Dusti Lemmond"}).pretty()
+
 {
         "_id" : 60,
         "name" : "Dusti Lemmond",
@@ -89,4 +105,5 @@ db.testCollect.update({name:"Dusti Lemmond"},{$set:{accepted:true}}, {multi: tru
                 }
         ],
         "accepted" : true
-=============
+
+		=============
